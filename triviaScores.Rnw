@@ -1,9 +1,10 @@
 \documentclass{article}
 \usepackage[margin = 1in]{geometry}
-\title{Analysis of Jolly Pumpkin Trivia Scores: 09-18-18}
+\title{Analysis of Jolly Pumpkin Trivia Scores}
 \date{}
 \begin{document}
 \maketitle
+\section{09-18-18}
 <<echo = FALSE, fig.width = 5, fig.height = 4, fig.align = 'center'>>=
 scores <- read.csv("scores_091818.csv", header = F)
 shapiroTest <- shapiro.test(scores$V2)
@@ -18,5 +19,20 @@ qqnorm(scale(scores$V2), pch = 19)
 abline(a = 0, b = 1, col = "red")
 @
 
+\newpage
+\section{09-25-18}
+<<echo = FALSE, fig.width = 5, fig.height = 4, fig.align = 'center'>>=
+scores <- read.csv("scores_092518.csv", header = F)
+shapiroTest <- shapiro.test(scores$V2)
+testText <- ifelse(shapiroTest$p < .05, "reject", "fail to reject")
+@
+The distribution of scores from this week is left skewed with a scaled third moment of \Sexpr{round(mean(scale(scores$V2)^3), 3)} and has excess kurtosis with a scaled fourth moment of \Sexpr{round(mean(scale(scores$V2)^4), 3)}. With a sample size of \Sexpr{dim(scores)[1]} scores, when using a Shapiro-Wilk test for normality, we \Sexpr{testText} the null hypothesis of normality with a p-value of \Sexpr{round(shapiroTest$p, 3)}.
+<<echo = FALSE, fig.height = 7, fig.align = 'center'>>=
+par(mfrow = c(2,2))
+hist(scores$V2, main = "Scores from 09-18-18", xlab = "Scores")
+plot(ecdf(scores$V2), main = "Empirical CDF of scores", xlab = "Scores")
+qqnorm(scale(scores$V2), pch = 19)
+abline(a = 0, b = 1, col = "red")
+@
 
 \end{document}
